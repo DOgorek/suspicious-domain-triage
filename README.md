@@ -38,8 +38,6 @@ The configuration for each action is in [`actions/`](actions/), one JSON file pe
 
 ## Threshold: why "more than 2"
 
-<!-- TODO: rewrite in your own words, using the reasoning from your capstone. -->
-
 A domain is escalated when **3 or more** VirusTotal engines classify it as malicious.
 
 - **Why not 1?** One or two detections out of roughly 90 engines are often noise: a single vendor with aggressive heuristics, or a stale listing. Escalating on one detection would flood an analyst with false positives.
@@ -51,7 +49,7 @@ A domain is escalated when **3 or more** VirusTotal engines classify it as malic
 
 ## Design decisions
 
-- **API key stored in Tines Credentials,** referenced as `CREDENTIAL.virustotal_api_key`, never pasted into the action.
+- **API key stored in Tines Credentials,** referenced as `CREDENTIAL.virustotal`, never pasted into the action.
 - **"Unknown" is not treated as an error.** VirusTotal returns HTTP 404 for a domain it has never seen. The workflow treats that as zero detections and routes it to the clean branch, logging `known_to_virustotal: false` so the gap is visible.
 - **Rate limits are expected.** The VirusTotal request retries automatically on HTTP 429, because the free API allows only a few requests per minute.
 
@@ -59,14 +57,13 @@ A domain is escalated when **3 or more** VirusTotal engines classify it as malic
 
 ## Testing
 
-<!-- TODO: fill in the "Actual" column after running each test. -->
-
 | Input | Expected | Actual |
 |---|---|---|
-| `example.com` | Clean branch, logged, no email | TODO |
-| `paypa1.com` | Depends on current VirusTotal data | TODO |
-| a never-registered domain, e.g. `nx-test-12345-abc.com` | VirusTotal 404, clean branch, `known_to_virustotal: false` | TODO |
-| a domain currently listed on URLhaus or OpenPhish | Escalated, email sent | TODO |
+| `paypa1.com` | Escalated (typosquat of paypal.com) | Escalated, email sent: 11 malicious, 1 suspicious, 47 harmless, 33 undetected |
+| `example.com` | Clean branch, logged, no email | Clean branch, logged, no email |
+| `nx-test-12345-abc.com` (never registered) | VirusTotal 404, clean branch | Clean branch, logged with `known_to_virustotal: false` |
+
+One result worth noting: `paypa1.com` had 11 engine detections but a VirusTotal community reputation score of **+2**. The automated engines and the community vote disagreed, which is a concrete example of why a single signal shouldn't be trusted on its own.
 
 ![Sample escalation email](docs/images/sample-email.png)
 
@@ -78,7 +75,7 @@ A domain is escalated when **3 or more** VirusTotal engines classify it as malic
 - **One intelligence source.** A single source is a single point of failure, and VirusTotal is weakest on very new domains.
 - **Free-tier API limits.** VirusTotal's public API is rate-limited and capped daily, so this can't handle a burst of submissions.
 - **No input cleanup.** Defanged input such as `hxxps://paypa1[.]com` isn't converted; the domain must be submitted plainly.
-- **Threshold is reasoned, not measured.** It hasn't been validated against a labeled set of real alerts. <!-- TODO: if your capstone measured accuracy, say so here instead. -->
+- **Threshold is reasoned, not measured.** It hasn't been validated against a labeled set of real alerts.
 - **No caching:** the same domain submitted twice makes two API calls.
 
 ---

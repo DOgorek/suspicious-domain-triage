@@ -1,0 +1,7 @@
+{
+  "recipients": "YOUR_EMAIL@example.com",
+  "sender_name": "Suspicious Domain Triage (lab)",
+  "subject": "[LAB] ESCALATE: <<receive_suspicious_domain.body.domain>> (<<vt_domain_report.body.data.attributes.last_analysis_stats.malicious>> VirusTotal detections)",
+  "content_type": "text/html",
+  "body": "<h2>Suspicious Domain Triage: ESCALATE</h2><p><b>Domain:</b> <<receive_suspicious_domain.body.domain>><br/><b>Verdict:</b> Likely malicious. More than 2 VirusTotal engines flagged this domain. Analyst review required.</p><table border='1' cellpadding='6' cellspacing='0'><tr><th align='left'>VirusTotal result</th><th align='left'>Engines</th></tr><tr><td>Malicious</td><td><b><<vt_domain_report.body.data.attributes.last_analysis_stats.malicious>></b></td></tr><tr><td>Suspicious</td><td><<DEFAULT(vt_domain_report.body.data.attributes.last_analysis_stats.suspicious, 0)>></td></tr><tr><td>Harmless</td><td><<DEFAULT(vt_domain_report.body.data.attributes.last_analysis_stats.harmless, 0)>></td></tr><tr><td>Undetected</td><td><<DEFAULT(vt_domain_report.body.data.attributes.last_analysis_stats.undetected, 0)>></td></tr></table><p><b>Community reputation score:</b> <<DEFAULT(vt_domain_report.body.data.attributes.reputation, 'n/a')>></p><p><a href='https://www.virustotal.com/gui/domain/<<DOWNCASE(STRIP(receive_suspicious_domain.body.domain))>>'>Open the VirusTotal report</a></p><p><i>Lab build. Automated enrichment only; no containment action has been taken.</i></p>"
+}

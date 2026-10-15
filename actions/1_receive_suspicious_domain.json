@@ -1,0 +1,7 @@
+{
+  "path": "KEEP_THE_PATH_TINES_GENERATED",
+  "secret": "KEEP_THE_SECRET_TINES_GENERATED",
+  "verbs": "post",
+  "response": "Triage started",
+  "response_code": 202
+}

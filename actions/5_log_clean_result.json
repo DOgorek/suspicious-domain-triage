@@ -1,0 +1,14 @@
+{
+  "mode": "message_only",
+  "payload": {
+    "verdict": "NO_HITS",
+    "verdict_text": "VirusTotal malicious count at or below threshold. Logged and closed; no notification sent.",
+    "domain": "=receive_suspicious_domain.body.domain",
+    "vt_http_status": "=vt_domain_report.status",
+    "known_to_virustotal": "=vt_domain_report.status = 200",
+    "vt_malicious": "=DEFAULT(vt_domain_report.body.data.attributes.last_analysis_stats.malicious, 0)",
+    "vt_suspicious": "=DEFAULT(vt_domain_report.body.data.attributes.last_analysis_stats.suspicious, 0)",
+    "threshold_used": "malicious > 2",
+    "logged_at": "=DATE('now', '%Y-%m-%dT%H:%M:%S%z')"
+  }
+}

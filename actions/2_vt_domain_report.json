@@ -1,0 +1,11 @@
+{
+  "url": "https://www.virustotal.com/api/v3/domains/<<DOWNCASE(STRIP(receive_suspicious_domain.body.domain))>>",
+  "method": "get",
+  "headers": {
+    "x-apikey": "<<CREDENTIAL.virustotal_api_key>>",
+    "accept": "application/json"
+  },
+  "retry_on_status": ["429"],
+  "retries": 3,
+  "log_error_on_status": ["400-403", "405-499", "500-599"]
+}
